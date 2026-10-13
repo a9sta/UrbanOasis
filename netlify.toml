@@ -1,0 +1,27 @@
+# 깃 연동 빌드가 읽는 설정. zip 을 직접 올리는 배포에서는 여기 대신
+# dist/_headers 와 dist/_redirects 가 같은 일을 한다(빌드가 둘 다 떨어뜨린다).
+# ★서브도메인 'urbanoasis' 는 이미 남이 쓰고 있어 'urbanoasis-care' 로 받았다.
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+[build.environment]
+  NODE_VERSION = "20"
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Content-Type-Options = "nosniff"
+    X-Frame-Options = "SAMEORIGIN"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+
+[[headers]]
+  for = "/assets/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[redirects]]
+  from = "/index.html"
+  to = "/"
+  status = 301
+  force = true

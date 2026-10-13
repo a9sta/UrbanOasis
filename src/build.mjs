@@ -3,7 +3,7 @@
  *   node src/build.mjs   →  dist/
  *
  * 호스팅은 Netlify 다. `_headers` 와 `_redirects` 를 publish 폴더에 떨어뜨리면 그대로 읽힌다.
- * ★같은 두 파일을 Cloudflare 도 읽으므로 호스트를 옮겨도 빌드를 고칠 일이 없다.
+ * ★Cloudflare 로 옮길 일이 생기면 _redirects 의 느낌표만 떼면 된다(그 파서는 못 읽는다).
  */
 import fs from 'node:fs';
 import crypto from 'node:crypto';
@@ -262,8 +262,11 @@ fs.writeFileSync(path.join(DIST, '_headers'), `/*
   Content-Type: text/plain; charset=utf-8
 `);
 
-// ★'301!' 은 Netlify 전용 강제 표기다. Cloudflare 는 느낌표를 못 읽는다.
-fs.writeFileSync(path.join(DIST, '_redirects'), `/index.html   /   301
+// ★느낌표는 '파일이 실제로 있어도 리다이렉트하라'는 뜻이다. dist/index.html 이
+//   있으므로 Netlify 에서는 이게 없으면 /index.html 이 그대로 열려 주소가 둘로 갈린다.
+//   반대로 Cloudflare 파서는 느낌표를 모른다 — 그래서 기준 주소를 보고 갈라 쓴다.
+const FORCE = cfg.siteUrl.includes('netlify.app') ? '!' : '';
+fs.writeFileSync(path.join(DIST, '_redirects'), `/index.html   /   301${FORCE}
 `);
 
 fs.writeFileSync(path.join(DIST, 'site.webmanifest'), JSON.stringify({
