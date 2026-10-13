@@ -262,7 +262,8 @@ fs.writeFileSync(path.join(DIST, '_headers'), `/*
   Content-Type: text/plain; charset=utf-8
 `);
 
-fs.writeFileSync(path.join(DIST, '_redirects'), `/index.html   /   301!
+// ★'301!' 은 Netlify 전용 강제 표기다. Cloudflare 는 느낌표를 못 읽는다.
+fs.writeFileSync(path.join(DIST, '_redirects'), `/index.html   /   301
 `);
 
 fs.writeFileSync(path.join(DIST, 'site.webmanifest'), JSON.stringify({
