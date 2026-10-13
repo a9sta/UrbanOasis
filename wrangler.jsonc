@@ -1,0 +1,13 @@
+{
+  // Cloudflare Workers 정적 자산 전용 워커.
+  // ★main 을 두지 않는다. 코드를 실행하지 않고 dist/ 를 그대로 내보내기만 한다.
+  //   main 이 있으면 배포 단계에서 스크립트 버전을 올리려다 실패한다(벨벳럽에서 겪음).
+  // ★_headers 와 _redirects 는 dist 안에 떨어지고 Workers 가 그대로 읽는다.
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "urbanoasis",
+  "compatibility_date": "2026-10-01",
+  "assets": {
+    "directory": "./dist",
+    "not_found_handling": "404-page"
+  }
+}
